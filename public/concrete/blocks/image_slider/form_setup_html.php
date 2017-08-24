@@ -344,6 +344,19 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             <label class="control-label"><?php echo t('Title'); ?></label>
             <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('title'); ?>[]" value="<%=title%>" />
         </div>
+
+
+		<div class="form-group" >
+            <label class="control-label"><?php echo t('Price'); ?></label>
+            <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('price'); ?>[]" value="<%=price%>" />
+        </div>
+
+        <div class="form-group" >
+            <label class="control-label"><?php echo t('Short description'); ?></label>
+            <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('short_description'); ?>[]" value="<%=short_description%>" />
+        </div>
+
+
         <div class="form-group" >
             <label class="control-label"><?php echo t('Description'); ?></label>
             <div class="editor-edit-content"></div>

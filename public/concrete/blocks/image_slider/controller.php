@@ -214,12 +214,14 @@ class Controller extends BlockController implements FileTrackableInterface
                     $args['description'][$i] = LinkAbstractor::translateTo($args['description'][$i]);
                 }
 
-                $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
+                $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, short_description, price, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?, ?, ?, ?, ?, ?)',
                     array(
                         $this->bID,
                         intval($args['fID'][$i]),
                         $args['title'][$i],
                         $args['description'][$i],
+                        $args['short_description'][$i],
+                        $args['price'][$i],
                         $args['sortOrder'][$i],
                         $linkURL,
                         $internalLinkCID,
