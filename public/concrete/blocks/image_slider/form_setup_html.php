@@ -92,6 +92,10 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
                     link_url: '<?php echo $row['linkURL']; ?>',
                     link_type: '<?php echo $linkType; ?>',
                     title: '<?php echo addslashes(h($row['title'])); ?>',
+
+                    price: '<?php echo $row['price']; ?>',
+                    short_description: '<?php echo $row['short_description']; ?>',
+
                     description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes(h($row['description']))); ?>',
                     sort_order: '<?php echo $row['sortOrder']; ?>'
                 }));
@@ -111,6 +115,8 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
                 title: '',
                 link_url: '',
                 cID: '',
+                price: 0,
+                short_description: '',
                 description: '',
                 link_type: 0,
                 sort_order: '',
@@ -345,17 +351,15 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('title'); ?>[]" value="<%=title%>" />
         </div>
 
-
-		<div class="form-group" >
-            <label class="control-label"><?php echo t('Price'); ?></label>
-            <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('price'); ?>[]" value="<%=price%>" />
+        <div class="form-group" >
+        	<label class="control-label"><?php echo t('Price'); ?></label>
+        	<input class="form-control ccm-input-number" type="number" name="<?php echo $view->field('price'); ?>[]" value="<%=price%>"/>
         </div>
 
         <div class="form-group" >
             <label class="control-label"><?php echo t('Short description'); ?></label>
             <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('short_description'); ?>[]" value="<%=short_description%>" />
         </div>
-
 
         <div class="form-group" >
             <label class="control-label"><?php echo t('Description'); ?></label>

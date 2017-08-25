@@ -246,4 +246,11 @@ class Controller extends BlockController implements FileTrackableInterface
         return $this->getCollectionObject();
     }
 
+    public function action_addToCart() {
+    	//var_dump('functia');
+    	//die();
+    	//var_dump();
+    	return json_encode(['success' => 'true']);
+    }
+
 }

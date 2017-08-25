@@ -4,6 +4,7 @@
     position: relative;
 }
 
+/*
 .ccm-image-slider-text {
     position: absolute;
     width: 45%;
@@ -22,7 +23,33 @@
     height: 100%;
     left: 0px;
 }
-
+*/
 .rslides {
     margin: 0 auto;
+    overflow: visible;
+}
+.rslides > li {
+    max-height: none !important;
+    position: relative !important;
+    display: inline-block !important;
+    padding-top: 20px !important;
+    width: 100%;
+}
+.ccm-image-slider-title {
+	margin-top: 0px;
+}
+.table_header {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    background-color: #222;
+    color: #FFF;
+    font-weight: 600;
+    font-size: 14px;
+}
+.table_header .col-md-2:not(:last-child) {
+    border-right: 1px solid #FFF;
+}
+.table_header .col-md-2 p {
+	
 }

@@ -25,6 +25,29 @@ if ($c->isEditMode()) {
     ?>
 <script>
 $(document).ready(function(){
+    $('.add_to_cart').click(function(event) {
+        event.preventDefault();
+        console.log('click on add to cart');
+        prod_id = $(this).data('id');
+        console.log(prod_id);
+        $.ajax({
+            <?php /* url: "<?=$view->action('addToCart')?>", */ ?>
+            url: "/index.php/add_to_cart/" + prod_id,
+            type: 'post',
+            dataType: 'json',
+            success: function(response) {
+                console.log('success');
+                console.log(response);
+            }
+        }).done(function(response) {
+            console.log('done');
+            console.log(response);
+        }).fail(function(response)  {
+            console.log('fail');
+            console.log(response);
+        });
+    });
+	<?php /*
     $(function () {
         $("#ccm-image-slider-<?php echo $bID ?>").responsiveSlides({
             prevText: "",   // String: Text for the "previous" button
@@ -46,67 +69,80 @@ $(document).ready(function(){
             <?php if ($maxWidth) { echo "maxwidth: $maxWidth,"; } ?>
         });
     });
+    */ ?>
 });
 </script>
 
 <div class="ccm-image-slider-container ccm-block-image-slider-<?php echo $navigationTypeText?>" >
     <div class="ccm-image-slider">
         <div class="ccm-image-slider-inner">
-
-        <?php if (count($rows) > 0) {
-    ?>
-        <ul class="rslides" id="ccm-image-slider-<?php echo $bID ?>">
-            <?php foreach ($rows as $row) {
-    ?>
-                <li>
-                <?php if ($row['linkURL']) {
-    ?>
-                    <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
-                <?php
-}
-    ?>
-                <?php
-                $f = File::getByID($row['fID'])
-                ?>
-                <?php if (is_object($f)) {
-    $tag = Core::make('html/image', array($f, false))->getTag();
-    if ($row['title']) {
-        $tag->alt($row['title']);
-    } else {
-        $tag->alt("slide");
-    }
-    echo $tag;
-    ?>
-                <?php
-}
-    ?>
-                <div class="ccm-image-slider-text">
-                    <?php if ($row['title']) {
-    ?>
-                    	<h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
-                    <?php
-}
-    ?>
-                    <?php echo $row['description'] ?>
+            <div class="table_header">
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Image</p>
                 </div>
-                </li>
-            <?php
-}
-    ?>
-        </ul>
-        <?php
-} else {
-    ?>
-        <div class="ccm-image-slider-placeholder">
-            <p><?php echo t('No Slides Entered.');
-    ?></p>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Title</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Price</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Description</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Short description</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p></p>
+                </div>
+            </div>
+            <?php if (count($rows) > 0) { ?>
+            <ul class="rslides" id="ccm-image-slider-<?php echo $bID ?>">
+                <?php foreach ($rows as $row) { ?>
+                    <li>
+                        <?php /* if ($row['linkURL']) { ?>
+                            <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
+                        <?php } */ ?>
+                        <?php $f = File::getByID($row['fID']) ?>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <?php 
+                            if (is_object($f)) {
+                                $tag = Core::make('html/image', array($f, false))->getTag();
+                                if ($row['title']) {
+                                    $tag->alt($row['title']);
+                                } else {
+                                    $tag->alt("slide");
+                                }
+                                echo $tag;
+                            }
+                            ?>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <?php if ($row['title']) { ?>
+                                <h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
+                            <?php } ?>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <p><?php echo $row['price'] ?></p>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <?php echo $row['description'] ?>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <p><?php echo $row['short_description'] ?></p>
+                        </div>
+                        <div class="col-xs-12 col-sm-2 col-md-2">
+                            <button data-id="<?php echo $row['id'] ?>" class="add_to_cart">Add to cart</button>
+                        </div>
+                    </li>
+                <?php } ?>
+            </ul>
+            <?php } else { ?>
+            <div class="ccm-image-slider-placeholder">
+                <p><?php echo t('No Slides Entered.'); ?></p>
+            </div>
+            <?php } ?>
         </div>
-        <?php
-}
-    ?>
-        </div>
-
     </div>
 </div>
-<?php
-} ?>
+<?php } ?>
