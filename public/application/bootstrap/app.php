@@ -67,13 +67,9 @@
  */
 
 Route::register('/add_to_cart/{prod_id}', function($prod_id = null) {
-	//print 'This is a contrived example.';
-	//var_dump($arg);
 	if((is_numeric($prod_id) && $prod_id > 0 && $prod_id == round($prod_id))) { // check if variable is a positive integer
-		echo "variable is integer";
-        $prod_id = (int)$prod_id;
+		$prod_id = (int)$prod_id;
         $session = $this->app['session']; //this is the app session, important!
-        //$session->set('cart_ids', null);
         $cart_ids = $session->get('cart_ids');
         if(is_null($cart_ids) || empty($cart_ids)) {
             $session->set('cart_ids', [0 => $prod_id]);
@@ -81,14 +77,66 @@ Route::register('/add_to_cart/{prod_id}', function($prod_id = null) {
             if(!in_array($prod_id, $cart_ids)) {
                 array_push($cart_ids, $prod_id);
                 $session->set('cart_ids', $cart_ids);
+            } else {
+                return json_encode(['success' => 'already']);
             }
         }
         $cart_ids_final = $session->get('cart_ids');
-        var_dump($cart_ids_final);
-	} else {
+    } else {
 		return json_encode(['success' => 'false']);
 	}
 	return json_encode(['success' => 'true', 'id' => $prod_id]);
+});
+
+Route::register('/remove_from_cart/{prod_id}', function($prod_id = null) {
+	if((is_numeric($prod_id) && $prod_id > 0 && $prod_id == round($prod_id))) { // check if variable is a positive integer
+        $prod_id = (int)$prod_id;
+        $session = $this->app['session']; //this is the app session, important!
+        $cart_ids = $session->get('cart_ids');
+        if(is_array($cart_ids)) {
+            $cart_ids = array_diff($cart_ids, [$prod_id]);
+        }
+        $cart_ids = array_values($cart_ids);
+        $session->set('cart_ids', $cart_ids);
+	    return json_encode(['success' => 'true', 'id' => $prod_id]);
+    } else {
+        return json_encode(['success' => 'false']);
+    }
+});
+
+Route::register('/empty_cart', function() {
+    $session = $this->app['session']; //this is the app session, important!
+    $session->set('cart_ids', []);
+    return json_encode(['success' => 'true']);
+});
+
+Route::register('/get_cart', function() {
+    $session = $this->app['session']; //this is the app session, important!
+    $cart_ids = $session->get('cart_ids');
+    var_dump($cart_ids);
+    return json_encode(['success' => 'true']);
+});
+
+Route::register('/get_cart_prods', function() {
+    $session = $this->app['session']; //this is the app session, important!
+    $cart_ids = $session->get('cart_ids');
+    $counter = count($cart_ids);
+    if($counter != 0) {
+        $qst_marks = '';
+        for ($i = 1; $i <= $counter; $i++) {
+            if($i != $counter) {
+                $qst_marks .= '?,';
+            } else {
+                $qst_marks .= '?';
+            }
+        }
+        $query_string = 'SELECT * from btImageSliderEntries WHERE id IN (' . $qst_marks . ') ORDER BY sortOrder';
+        $db = Database::get();
+        $query = $db->GetAll($query_string, $cart_ids);
+        return json_encode(['success' => 'true', 'products' => $query]);
+    } else {
+        return json_encode(['success' => 'fail']);
+    }
 });
 
 /*

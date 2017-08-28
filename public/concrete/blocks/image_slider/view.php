@@ -24,29 +24,106 @@ if ($c->isEditMode()) {
 } else {
     ?>
 <script>
-$(document).ready(function(){
+function reload_cart() {
+    $( "#ccm-image-slider-cart" ).html( '<p>Loading ...</p>' );
+    $.ajax({
+        url: "/index.php/get_cart_prods",
+        type: 'post',
+        dataType: 'json',
+        success: function(response) {
+            console.log('success get cart products');
+            if(response['success'] == "true") {
+                products = response['products'];
+//                console.log(products);
+                cartHTML = '';
+                $.each( products, function( key, value ) {
+//                    console.log(value);
+                    cartHTML += '<li>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += '<img src="http://via.placeholder.com/350x150" />';
+                        cartHTML += '</div>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += '<h2>' + value["title"] + '</h2>';
+                        cartHTML += '</div>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += '<p>' + value["price"] + '</p>';
+                        cartHTML += '</div>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += value["description"];
+                        cartHTML += '</div>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += '<p>' + value["short_description"] + '</p>';
+                        cartHTML += '</div>';
+                        cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
+                            cartHTML += '<button data-id="' + value['id'] + '" class="remove_from_cart">Remove from cart</button>';
+                        cartHTML += '</div>';                        
+                    cartHTML += '</li>';
+                });
+//                console.log(cartHTML);
+                $( "#ccm-image-slider-cart" ).html( cartHTML );
+                $('.ccm-block-image-slider-cart').next('.container').show();
+            } else {
+                $( "#ccm-image-slider-cart" ).html( '<p>There are no products currently in the cart!</p>' );
+                $('.ccm-block-image-slider-cart').next('.container').hide();
+            }
+        }
+    }).fail(function(response)  {
+        console.log('fail get cart products');
+    });
+}
+    
+$(document).ready(function() {
     $('.add_to_cart').click(function(event) {
         event.preventDefault();
         console.log('click on add to cart');
         prod_id = $(this).data('id');
         console.log(prod_id);
         $.ajax({
-            <?php /* url: "<?=$view->action('addToCart')?>", */ ?>
             url: "/index.php/add_to_cart/" + prod_id,
             type: 'post',
             dataType: 'json',
             success: function(response) {
                 console.log('success');
                 console.log(response);
+                if(response['success'] == 'already') {
+                    alert('The product has been already added in the cart!');
+                } else {
+                    reload_cart();
+                }
             }
-        }).done(function(response) {
-            console.log('done');
-            console.log(response);
         }).fail(function(response)  {
-            console.log('fail');
+            console.log('fail add to cart');
             console.log(response);
         });
     });
+    
+    $('.remove_from_cart').click(function(event) {
+        event.preventDefault();
+        console.log('click on remove from cart');
+        
+        prod_id = $(this).data('id');
+        console.log(prod_id);
+        
+        $.ajax({
+            url: "/index.php/remove_from_cart/" + prod_id,
+            type: 'post',
+            dataType: 'json',
+            success: function(response) {
+                console.log('success');
+                console.log(response);
+                reload_cart();
+            }
+        }).done(function(response) {
+            console.log('done remove from cart');
+            console.log(response);
+        }).fail(function(response)  {
+            console.log('fail remove from cart');
+            console.log(response);
+        });
+    });
+    
+    reload_cart();
+    
 	<?php /*
     $(function () {
         $("#ccm-image-slider-<?php echo $bID ?>").responsiveSlides({
@@ -71,9 +148,33 @@ $(document).ready(function(){
     });
     */ ?>
 });
+    
+$(document).on('click', '.remove_from_cart', function() { 
+    event.preventDefault();
+    console.log('click on remove from cart');
+    prod_id = $(this).data('id');
+    console.log(prod_id);
+    $.ajax({
+        url: "/index.php/remove_from_cart/" + prod_id,
+        type: 'post',
+        dataType: 'json',
+        success: function(response) {
+            console.log('success');
+            console.log(response);
+            reload_cart();
+        }
+    }).done(function(response) {
+        console.log('done remove from cart');
+        console.log(response);
+    }).fail(function(response)  {
+        console.log('fail remove from cart');
+        console.log(response);
+    });
+});
 </script>
 
 <div class="ccm-image-slider-container ccm-block-image-slider-<?php echo $navigationTypeText?>" >
+    <h2 class="products_title">My products</h2>
     <div class="ccm-image-slider">
         <div class="ccm-image-slider-inner">
             <div class="table_header">
@@ -142,6 +243,37 @@ $(document).ready(function(){
                 <p><?php echo t('No Slides Entered.'); ?></p>
             </div>
             <?php } ?>
+        </div>
+    </div>
+</div>
+
+<div class="ccm-image-slider-container ccm-block-image-slider-cart" >
+    <h2 class="products_title">Products currently in cart</h2>
+    <div class="ccm-image-slider">
+        <div class="ccm-image-slider-inner">
+            <div class="table_header">
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Image</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Title</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Price</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Description</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p>Short description</p>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <p></p>
+                </div>
+            </div>
+            <ul class="rslides" id="ccm-image-slider-cart">
+                <p>Loading ...</p>
+            </ul>
         </div>
     </div>
 </div>
