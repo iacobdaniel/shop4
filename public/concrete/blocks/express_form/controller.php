@@ -125,6 +125,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function action_submit($bID = null)
     {
         if ($this->bID == $bID) {
+//            var_dump("action_submit");
+//            die();
+            
             $entityManager = \Core::make('database/orm')->entityManager();
             $form = $this->getFormEntity();
             if (is_object($form)) {
@@ -140,7 +143,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 if ($this->displayCaptcha) {
                     $validator->addRoutine(new CaptchaRoutine(\Core::make('helper/validation/captcha')));
                 }
-
+                
+//                var_dump($form);
+//                die();
+                
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
 
                 $e = $validator->getErrorList();
@@ -190,7 +196,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $notifier = $controller->getNotifier($this);
                     $notifications = $notifier->getNotificationList();
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
-
+                    
+//                    var_dump($form);
+//                    die();
+                        
                     foreach($values as $value) {
                         $value = $value->getValueObject();
                         if ($value instanceof FileProviderInterface) {

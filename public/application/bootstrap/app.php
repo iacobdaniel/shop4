@@ -133,11 +133,24 @@ Route::register('/get_cart_prods', function() {
         $query_string = 'SELECT * from btImageSliderEntries WHERE id IN (' . $qst_marks . ') ORDER BY sortOrder';
         $db = Database::get();
         $query = $db->GetAll($query_string, $cart_ids);
+        foreach($query as $key => $product) {
+            $f = File::getByID($product['fID']);
+            $tag = Core::make('html/image', array($f, false))->getTag();
+            ob_start();
+            echo $tag;
+            $img_html = ob_get_clean();
+            $query[$key]['img_html'] = $img_html;
+        }
         return json_encode(['success' => 'true', 'products' => $query]);
     } else {
         return json_encode(['success' => 'fail']);
     }
 });
+
+Route::register('/get_product_image/{image_id}', function($image_id = null) {
+	
+});
+
 
 /*
 Route::register('/test/{foo}/{bar}', function($foo, $bar) {

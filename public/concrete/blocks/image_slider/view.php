@@ -34,13 +34,24 @@ function reload_cart() {
             console.log('success get cart products');
             if(response['success'] == "true") {
                 products = response['products'];
-//                console.log(products);
                 cartHTML = '';
                 $.each( products, function( key, value ) {
-//                    console.log(value);
+//                    console.log(value["fID"]);
+                    $.ajax({
+                        url: "/index.php/get_product_image/" + value["fID"],
+                        type: 'post',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                            console.log('success on get image for product')
+                        }
+                    }).fail(function(response)  {
+                        console.log(response);
+                        console.log('fail on get image for product');
+                    });
                     cartHTML += '<li>';
                         cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
-                            cartHTML += '<img src="http://via.placeholder.com/350x150" />';
+                            cartHTML += value["img_html"];
                         cartHTML += '</div>';
                         cartHTML += '<div class="col-xs-12 col-sm-2 col-md-2">';
                             cartHTML += '<h2>' + value["title"] + '</h2>';
@@ -59,7 +70,6 @@ function reload_cart() {
                         cartHTML += '</div>';                        
                     cartHTML += '</li>';
                 });
-//                console.log(cartHTML);
                 $( "#ccm-image-slider-cart" ).html( cartHTML );
                 $('.ccm-block-image-slider-cart').next('.container').show();
             } else {
@@ -124,29 +134,6 @@ $(document).ready(function() {
     
     reload_cart();
     
-	<?php /*
-    $(function () {
-        $("#ccm-image-slider-<?php echo $bID ?>").responsiveSlides({
-            prevText: "",   // String: Text for the "previous" button
-            nextText: "",
-		<?php if ($navigationType == 0) {?>
-		nav:true,
-		<?php
-		}elseif($navigationType == 1) {?> 
-		pager: true,
-		<?php }
-		else{?>
-		nav:true,
-		pager: true,
-		<?php }?>
-            <?php if ($timeout) { echo "timeout: $timeout,"; } ?>
-            <?php if ($speed) { echo "speed: $speed,"; } ?>
-            <?php if ($pause) { echo "pause: true,"; } ?>
-            <?php if ($noAnimate) { echo "auto: false,"; } ?>
-            <?php if ($maxWidth) { echo "maxwidth: $maxWidth,"; } ?>
-        });
-    });
-    */ ?>
 });
     
 $(document).on('click', '.remove_from_cart', function() { 
@@ -201,9 +188,6 @@ $(document).on('click', '.remove_from_cart', function() {
             <ul class="rslides" id="ccm-image-slider-<?php echo $bID ?>">
                 <?php foreach ($rows as $row) { ?>
                     <li>
-                        <?php /* if ($row['linkURL']) { ?>
-                            <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
-                        <?php } */ ?>
                         <?php $f = File::getByID($row['fID']) ?>
                         <div class="col-xs-12 col-sm-2 col-md-2">
                             <?php 

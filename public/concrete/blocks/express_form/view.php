@@ -21,7 +21,6 @@
                 
                 <?php
                 print $renderer->render();
-
                 if ($displayCaptcha) {
                     $captcha = \Core::make('helper/validation/captcha');
                     ?>
@@ -30,10 +29,8 @@
                         $captchaLabel = $captcha->label();
                         if (!empty($captchaLabel)) {
                             ?>
-                            <label class="control-label"><?php echo $captchaLabel;
-                                ?></label>
+                            <label class="control-label"><?php echo $captchaLabel; ?></label>
                             <?php
-
                         }
                         ?>
                         <div><?php  $captcha->display(); ?></div>
