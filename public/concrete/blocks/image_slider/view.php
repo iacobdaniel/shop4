@@ -28,11 +28,11 @@ if ($c->isEditMode()) {
 function reload_cart() {
     $( "#ccm-image-slider-cart" ).html( '<p>Loading ...</p>' );
     $.ajax({
-        url: "/index.php/get_cart_prods",
+        url: "/get_cart_prods",
         type: 'post',
         dataType: 'json',
         success: function(response) {
-            if(response['success'] == "true") {
+            if(response['success'] == true) {
                 products = response['products'];
                 cartHTML = '';
                 $.each( products, function( key, value ) {
@@ -72,14 +72,18 @@ $(document).ready(function() {
         event.preventDefault();
         prod_id = $(this).data('id');
         $.ajax({
-            url: "/index.php/add_to_cart/" + prod_id,
+            url: "/add_to_cart/" + prod_id,
             type: 'post',
             dataType: 'json',
             success: function(response) {
-                if(response['success'] == 'already') {
-                    alert('The product has been already added in the cart!');
-                } else {
+                if(response['success'] == true) {
                     reload_cart();
+                } else {
+                    if(response['code'] == 'already') {
+                        alert('The product has been already added in the cart!');
+                    } else if(response['code'] == 'already') {
+                        alert('There was an error while trying to add the product to cart. Try again later.');
+                    }
                 }
             }
         });
@@ -89,7 +93,7 @@ $(document).ready(function() {
         event.preventDefault();
         prod_id = $(this).data('id');
         $.ajax({
-            url: "/index.php/remove_from_cart/" + prod_id,
+            url: "/remove_from_cart/" + prod_id,
             type: 'post',
             dataType: 'json',
             success: function(response) {
