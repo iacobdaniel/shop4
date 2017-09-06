@@ -1,4 +1,17 @@
-<?php 
+<?php
+
+//use \Concrete\Core\User\User;
+//use Concrete\Core\User\UserInfo;
+
+//$u = new User();
+//var_dump($u->checkLogin());
+//var_dump($u->getUserID());
+//var_dump($u->isSuperUser());
+//var_dump($u->uName);
+//$ui = UserInfo::getByID(1);
+//var_dump($ui->getLastIPAddress());
+
+
 defined('C5_EXECUTE') or die(_("Access Denied."))
 ?>
 <script type="text/javascript">
@@ -116,8 +129,8 @@ $(document).ready(function() {
 
 <?php
 //$c = \Page::getCurrentPage();
-$page = \Page::getCurrentPage();
-var_dump($page->getCollectionID());
+//$page = \Page::getCurrentPage();
+//var_dump($page->getCollectionID());
 //var_dump($c);
 //var_dump($c->get());
 ?>
