@@ -1,6 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
 $navigationTypeText = ($navigationType == 0) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
+
 if ($c->isEditMode()) {
     $loc = Localization::getInstance();
     $loc->pushActiveContext(Localization::CONTEXT_UI);
