@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema version="0.3">
+    <table name="btAudio">
+        <field name="bID" type="I">
+            <key/>
+            <unsigned/>
+        </field>
+        <field name="fID" type="I" size="10">
+            <default value="0"/>
+            <unsigned/>
+        </field>
+        <field name="name" type="X">
+            <default value=""/>
+        </field>
+        <field name="description" type="X">
+            <default value=""/>
+        </field>
+    </table>
+</schema>

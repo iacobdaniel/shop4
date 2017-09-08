@@ -45,7 +45,7 @@ function reload_cart2() {
     });
 }
     
-$(document).on('click', '.remove_from_cart', function() { 
+$(document).on('click', '.remove_from_cart', function() {
     event.preventDefault();
     prod_id = $(this).data('id');
     $.ajax({
