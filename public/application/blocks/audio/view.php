@@ -3,12 +3,15 @@
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 $file = File::getByID($fID);
-$path = File::getRelativePathFromID($fID);
 
-if(is_object($file)) { ?>
+if(is_object($file)) {
+    $path = File::getRelativePathFromID($fID);
+    $version = $file->getVersion();
+    $mime_type = $version->getMimeType();
+    ?>
 
     <audio controls>
-        <source src="<?=$path ?>" type="<?=$file->getMimeType() ?>">
+        <source src="<?=$path ?>" type="<?=$mime_type ?>">
         Your browser does not support the audio element.
     </audio>
 

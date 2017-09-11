@@ -66,6 +66,8 @@
  * ----------------------------------------------------------------------------
  */
 
+Database::getDatabasePlatform()->registerDoctrineTypeMapping('bit', 'boolean');
+
 Route::register('/qqq', '\Application\Controller\Shop::asd');
 Route::register('/add_to_cart/{prod_id}', '\Application\Controller\Cart::addToCart');
 Route::register('/remove_from_cart/{prod_id}', '\Application\Controller\Cart::removeFromCart');
